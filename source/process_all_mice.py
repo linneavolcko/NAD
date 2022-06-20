@@ -32,7 +32,11 @@ def get_tdt_epochs(row):
     sipper = getattr(epoch_data.epocs, sipper_ttl).onset 
     
     licks_ttl = row[14]
-    licks = getattr(epoch_data.epocs, licks_ttl).onset
+    try:
+        licks = getattr(epoch_data.epocs, licks_ttl).onset
+    except AttributeError:
+        print("No licks in this session")
+        licks = []
 
     return sipper, licks
 
@@ -104,8 +108,9 @@ rows, header = tp.metafilereader("..//NAD_2_and_3.xls")
 datafolder = "D:\\Test Data\\photometry\\NAc GRAB photometry\\"
 
 # %%
-row = rows[53]
-mouse, session = row[2], row[6]
+## code for troubleshooting functions and running single mice
+row = rows[57]
+mouse, session, sex, diet = row[2], row[6], row[3], row[4]
 blue, uv, fs = get_tdt_data(row)
 corrected_signal = tp.processdata(blue, uv, fs=fs)
 sipper, licks = get_tdt_epochs(row)
@@ -113,12 +118,14 @@ lickdata = tp.lickCalc(licks)
 licks_per_trial, latency = get_licks_per_trial(sipper, licks)
 
 # %%
-snips_sip = get_snips(corrected_signal, sipper, pre=10, length=40, bins=400, baseline_seconds=8)
+snips_sip = get_snips(corrected_signal, sipper, pre=10, length=40, bins=400, do_not_remove_baseline=True)
 snips_sip_with_licks = [snip for snip,lpt in zip(snips_sip, licks_per_trial) if len(lpt)>0]
+if len(licks) > 0:
+    snips_licks = get_snips(corrected_signal, lickdata["rStart"], pre=10, length=40, bins=400, do_not_remove_baseline=True)
+else:
+    snips_licks = []
 
-snips_licks = get_snips(corrected_signal, lickdata["rStart"], pre=10, length=40, bins=400, do_not_remove_baseline=True)
-
-session_data = {"mouse": mouse, "session": session,
+session_data = {"mouse": mouse, "session": session, "sex": sex, "diet": diet,
                 "blue": blue, "uv": uv, "fs": fs,
                 "corrected_signal": corrected_signal,
                 "sipper": sipper, "licks": licks,
@@ -126,18 +133,21 @@ session_data = {"mouse": mouse, "session": session,
                 "snips_sip": snips_sip,
                 "snips_licks": snips_licks,
                 "snips_sip_with_licks": snips_sip_with_licks}
-# %%
-%run "NAD_fig_fx.py"
 
-# %%
-make_figs(session_data)
+all_session_data["{}_{}".format(mouse, session)] = session_data
+
+# # %%
+# %run "NAD_fig_fx.py"
+
+# # %%
+# make_figs(session_data)
 #%%
 
 all_session_data ={}
 
 for row in rows:
     if row[7] == "cues" and row[10] != 0:
-        mouse, session = row[2], row[6]
+        mouse, session, sex, diet = row[2], row[6], row[3], row[4],
         print("Getting data from {}, session {}".format(mouse, session))
 
         try:
@@ -147,12 +157,14 @@ for row in rows:
             lickdata = tp.lickCalc(licks)
             licks_per_trial, latency = get_licks_per_trial(sipper, licks)
 
-            snips_sip = get_snips(corrected_signal, sipper, pre=10, length=40, bins=400, baseline_seconds=8)
+            snips_sip = get_snips(corrected_signal, sipper, pre=10, length=40, bins=400, do_not_remove_baseline=True)
             snips_sip_with_licks = [snip for snip,lpt in zip(snips_sip, licks_per_trial) if len(lpt)>0]
+            if len(licks) > 0:
+                snips_licks = get_snips(corrected_signal, lickdata["rStart"], pre=10, length=40, bins=400, do_not_remove_baseline=True)
+            else:
+                snips_licks = []
 
-            snips_licks = get_snips(corrected_signal, lickdata["rStart"], pre=10, length=40, bins=400, do_not_remove_baseline=True)
-
-            session_data = {"mouse": mouse, "session": session,
+            session_data = {"mouse": mouse, "session": session, "sex": sex, "diet": diet,
                             "blue": blue, "uv": uv, "fs": fs,
                             "corrected_signal": corrected_signal,
                             "sipper": sipper, "licks": licks,
@@ -170,18 +182,17 @@ print("Finished running")
 # 
 # %%
 import dill
-with open(datafolder+"NAD_session_data", 'wb') as pickle_out:
+with open(datafolder+"NAD_session_data_no_baseline_removed", 'wb') as pickle_out:
     dill.dump(all_session_data, pickle_out)
 
 # %%
 import dill
-with open(datafolder+"NAD_session_data", 'rb') as pickle_in:
+with open(datafolder+"NAD_session_data_no_baseline_removed_BACKUP", 'rb') as pickle_in:
     all_session_data = dill.load(pickle_in)
 
 
 # %%
-for key, value in all_session_data.items():
-    session_data = value
+for key, session_data in all_session_data.items():
     make_figs(session_data)
     plt.close()
 
