@@ -57,7 +57,7 @@ for mouse in mice:
 
     for key, session_data in all_session_data.items():
         if session_data["mouse"] == mouse:
-            if (session_data["diet"] == "NR") or (session_data["diet"] == "PR"):
+            if (session_data["diet"] == "NRtoPR") or (session_data["diet"] == "PRtoNR"):
                 avg_data[mouse]["diet"].append(session_data["diet"])
                 avg_data[mouse]["all_snips_sip"].append(session_data["snips_sip"])
                 avg_data[mouse]["all_snips_licks"].append(session_data["snips_licks"])
@@ -118,12 +118,12 @@ pr_auc_pre, pr_auc_cue, pr_auc_sip = [], [], []
 
 for mouse in avg_data.keys():
     d = avg_data[mouse]
-    if d["diet"][0] == "NR":
+    if d["diet"][0] == "NRtoPR":
         print(mouse, d["diet"])
         nr_auc_pre.append(calculate_auc(d, key, epoch=[60,80]))
         nr_auc_cue.append(calculate_auc(d, key, epoch=[80,100]))
         nr_auc_sip.append(calculate_auc(d, key, epoch=[100,120]))
-    elif d["diet"][0] == "PR":
+    elif d["diet"][0] == "PRtoNR":
         print(mouse, d["diet"])
         pr_auc_pre.append(calculate_auc(d, key, epoch=[60,80]))
         pr_auc_cue.append(calculate_auc(d, key, epoch=[80,100]))
@@ -153,11 +153,11 @@ pr_auc_prelick, pr_auc_licks = [], []
 
 for mouse in avg_data.keys():
     d = avg_data[mouse]
-    if d["diet"][0] == "NR":
+    if d["diet"][0] == "NRtoPR":
         print(mouse, d["diet"])
         nr_auc_prelick.append(calculate_auc(d, key, epoch=[50,100]))
         nr_auc_licks.append(calculate_auc(d, key, epoch=[100,150]))
-    elif d["diet"][0] == "PR":
+    elif d["diet"][0] == "PRtoNR":
         print(mouse, d["diet"])
         pr_auc_prelick.append(calculate_auc(d, key, epoch=[50,100]))
         pr_auc_licks.append(calculate_auc(d, key, epoch=[100,150]))
@@ -181,9 +181,9 @@ pr_trace_licks = []
 
 for mouse in avg_data.keys():
     d = avg_data[mouse]
-    if d["diet"][0] == "NR":
+    if d["diet"][0] == "NRtoPR":
         nr_trace_licks.append(d[key])
-    elif d["diet"][0] == "PR":
+    elif d["diet"][0] == "PRtoNR":
         pr_trace_licks.append(d[key])
 
 # %%   
@@ -221,9 +221,9 @@ pr_trace_sip = []
 
 for mouse in avg_data.keys():
     d = avg_data[mouse]
-    if d["diet"][0] == "NR":
+    if d["diet"][0] == "NRtoPR":
         nr_trace_sip.append(d[key])
-    elif d["diet"][0] == "PR":
+    elif d["diet"][0] == "PRtoNR":
         pr_trace_sip.append(d[key])
 # %%
 
