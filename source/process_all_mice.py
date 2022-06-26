@@ -159,10 +159,8 @@ for row in rows:
 
             snips_sip = get_snips(corrected_signal, sipper, pre=10, length=40, bins=400, do_not_remove_baseline=True)
             snips_sip_with_licks = [snip for snip,lpt in zip(snips_sip, licks_per_trial) if len(lpt)>0]
-            if len(licks) > 0:
-                snips_licks = get_snips(corrected_signal, lickdata["rStart"], pre=10, length=40, bins=400, do_not_remove_baseline=True)
-            else:
-                snips_licks = []
+
+            snips_licks = get_snips(corrected_signal, lickdata["rStart"], pre=10, length=40, bins=400, do_not_remove_baseline=True)
 
             session_data = {"mouse": mouse, "session": session, "sex": sex, "diet": diet,
                             "blue": blue, "uv": uv, "fs": fs,

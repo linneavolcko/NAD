@@ -12,7 +12,7 @@ import trompy as tp
 # %% Figure settings
 %run NAD_fig_fx.py
 
-figsfolder = "C:\\Users\\jmc010\\UiT Office 365\\O365-Pipette 2 - Documents\\People\\Linnea\\Conferences\\2022 MMiN\\poster\\figures\\"
+figsfolder = "C:\\Users\\jmc010\\UiT Office 365\\O365-Pipette 2 - Documents\\People\\Linnea\\Conferences\\2022 SSIB\\poster\\figures\\"
 
 nr_color="grey"   # "#6D6D6D"
 nr_errorcolor="#EAEAEA"
@@ -144,7 +144,7 @@ _ = tp.barscatter([[nr_auc_pre, nr_auc_cue, nr_auc_sip], [pr_auc_pre, pr_auc_cue
                     ax=ax)
 
 ax.set_ylabel("AUC")
-f.savefig(figsfolder+"auc_sip.pdf")
+f.savefig(figsfolder+"auc_sip_rev.pdf")
 # %%
 key = "mean_snips_licks"
 
@@ -172,7 +172,7 @@ _ = tp.barscatter([[nr_auc_prelick, nr_auc_licks], [pr_auc_prelick, pr_auc_licks
                     linewidth=1.5, sc_kwargs={"alpha": 0.5},
                     ax=ax)
 ax.set_ylabel("AUC")
-f.savefig(figsfolder+"auc_licks.pdf")
+f.savefig(figsfolder+"auc_licks_rev.pdf")
 
 # %%
 key = "mean_snips_licks"
@@ -209,7 +209,7 @@ ax.annotate('5 s', xy=(376,y), xycoords='data',
             xytext=(0,-5), textcoords='offset points',
             ha='center',va='top')
 
-f.savefig(figsfolder + "nr_trace_licks.pdf")
+f.savefig(figsfolder + "nr_trace_licks_rev.pdf")
 # ax.plot(d["mean_snips_sip"], label=mouse)
 
 # ax.axvline(80)
@@ -248,7 +248,7 @@ ax.annotate('5 s', xy=(376,y), xycoords='data',
             xytext=(0,-5), textcoords='offset points',
             ha='center',va='top')
 
-f.savefig(figsfolder + "nr_trace_sip.pdf")
+f.savefig(figsfolder + "nr_trace_sip_rev.pdf")
 
 # %%
 # make_heatmap(nr_trace_sip)
@@ -311,7 +311,7 @@ cbar = f.colorbar(mesh, cax=ax[1], ticks=[-1, 0, 1])
     # ax.spines['bottom'].set_visible(False)
     # ax.spines['left'].set_visible(False)
 
-f.savefig(figsfolder+"heatmap_sip.pdf")
+f.savefig(figsfolder+"heatmap_sip_rev.pdf")
 # %%
 
 
@@ -351,7 +351,7 @@ cbar = f.colorbar(mesh, cax=ax[1], shrink=0.7)
 # ticks=[clims[0], 0, clims[1]]
     
 
-f.savefig(figsfolder+"heatmap_licks.pdf")
+f.savefig(figsfolder+"heatmap_licks_rev.pdf")
 
 # %%
 d = avg_data["NAD31"]
@@ -449,7 +449,7 @@ ax[0].set_ylim(ax[1].get_ylim())
 _ = day_comparison_fig([nr_licks_day1, nr_licks_day2, nr_licks_day3, nr_licks_day4, nr_licks_day5], [pr_licks_day1, pr_licks_day2, pr_licks_day3, pr_licks_day4, pr_licks_day5], title="licks", ax=ax[2])
 ax[2].set_yticks([0, .2, .4, .6])
 
-f.savefig(figsfolder+"auc_by_day.pdf")
+f.savefig(figsfolder+"auc_by_day_rev.pdf")
 
 # %%
 # for mouse in avg_data.keys():
@@ -471,9 +471,9 @@ PR_licks = []
 for mouse in avg_data.keys():
     d = avg_data[mouse]
     licks = tp.flatten_list(tp.flatten_list(d["all_licks_per_trial"]))
-    if d["diet"][0] == "NR":
+    if d["diet"][0] == "NRtoPR":
         NR_licks.append(licks)
-    elif d["diet"][0] == "PR":
+    elif d["diet"][0] == "PRtoNR":
         PR_licks.append(licks)
 
 bins=np.arange(-10, 30, 0.1)
@@ -485,6 +485,6 @@ ax.set_xlim([-10, 30])
 
 ax.axis('off')
 
-f.savefig(figsfolder+"licking_kde.pdf")
+f.savefig(figsfolder+"licking_kde_rev.pdf")
 
 # %%

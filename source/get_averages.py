@@ -12,7 +12,7 @@ import trompy as tp
 # %% Figure settings
 %run NAD_fig_fx.py
 
-figsfolder = "C:\\Users\\jmc010\\UiT Office 365\\O365-Pipette 2 - Documents\\People\\Linnea\\Conferences\\2022 MMiN\\poster\\figures\\"
+figsfolder = "C:\\Users\\jmc010\\UiT Office 365\\O365-Pipette 2 - Documents\\People\\Linnea\\Conferences\\2022 SSIB\\poster\\figures\\"
 
 nr_color="grey"   # "#6D6D6D"
 nr_errorcolor="#EAEAEA"
