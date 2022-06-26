@@ -8,7 +8,7 @@ import pickle
 # %%
 # Modified from your function. Tidied up a bit and added option for bins and variable pre-event and snip lengths.
 
-def get_snips_baseline(event, fs, signal, pre=10, length=20, bins=None):
+def get_snips_baseline(event, fs, signal, pre=10, length=20, bins=None, baseline_seconds=None):
     """
     Gets snips around an event.
 
@@ -21,7 +21,10 @@ def get_snips_baseline(event, fs, signal, pre=10, length=20, bins=None):
     length_in_sample = int(length_in_seconds * fs)
     snip = signal[start_in_sample: start_in_sample + length_in_sample]
     
-    baseline = snip[0 : int(pre * fs)]
+    if baseline_seconds == None:
+        baseline_seconds = pre
+        
+    baseline = snip[0 : int(baseline_seconds * fs)]
     mean = np.mean(baseline)
     std = np.std(baseline)
     
@@ -56,9 +59,11 @@ def get_snips_baseline(event, fs, signal, pre=10, length=20, bins=None):
 # snips = []
 
 # for sip in sipper:
-#     snip =get_snips_baseline(sip, fs, corrected_signal, pre=5, length=20, bins=200)
+#     snip =get_snips_baseline(sip, fs, corrected_signal, pre=10, length=40, bins=400)
 #     snips.append(snip)
 #     ax[0].plot(snip, color="grey", alpha = 0.3)
 # # %%
 # len(snips)
 # # %%
+
+# %%
